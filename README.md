@@ -4,10 +4,10 @@
 
 ## Team
 
-  - Anne Pruett
-  - Amanda Bozigian
-  - Michael Cooper
-  - Rebecca Townsend
+  - [Anne Pruett](https://github.com/ladyshaitan)
+  - [Amanda Bozigian](https://github.com/amboz)
+  - [Michael Cooper](https://github.com/mcooper92)
+  - [Rebecca Townsend](https://github.com/rtownsend722)
 
 ## Table of Contents
 
@@ -24,9 +24,9 @@
 
 ## Tech Stack
 - React
-- Node
+- Node.js
 - Express
-- mysql
+- PostgreSQL
 - Sequelize
 
 ## Requirements
@@ -41,11 +41,11 @@
 - npm 5.5.1
 - Express 4.16.2
 - Moment 2.19.2
+- pg 6.4.2
 - React 16.1.1
 - React DOM 16.1.1
 - React Bootstrap 0.31.5
 - Sequelize 4.22.12
-- mysql 2.15.0
 
 ## Development
 
