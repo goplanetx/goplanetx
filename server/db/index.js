@@ -1,73 +1,31 @@
-// This file initialize a sequelize instance
-// It contains code that defines models, their relationships, and creates the tables IF they don't already exist in mysql
-
-// try {
-//   const config = require('./config.js'); // need to update file path
-//   var username = config.USER;
-//   var port = config.DB_PORT;
-//   var host = config.HOST;
-//   var dbUrl = config.DATABASE_URL;
-// } catch (err) {
-//   var username = process.env.USER;
-//   var port = process.env.DB_PORT;
-//   var host = process.env.HOST;
-//   var dbUrl = process.env.DATABASE_URL;
-// }
-
-
-// if (!global.hasOwnProperty('db')) {
-//   var Sequelize = require('sequelize')
-//     , db = null
-
-//   if (dbUrl) {
-//     // the application is executed on Heroku ... use the postgres database
-//     db = new Sequelize(, {
-//       dialect:  'postgres',
-//       protocol: 'postgres',
-//       port:     port,
-//       host:     host,
-//       logging:  true //false
-//     })
-//   } else {
-//     // the application is executed on the local machine ... use mysql
-//     db = new Sequelize('messages', 'root', '', {dialect: 'mysql'});
-//   }
-// }
-
-
-
 const Sequelize = require('sequelize');
-db is named messages
-const db = new Sequelize('messages', 'root', '', {
-  dialect: 'mysql'
+const rgx = new RegExp(/postgres:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/);
+const match = process.env.DATABASE_URL ? process.env.DATABASE_URL.match(rgx) : 'postgres://sfqhmrafrkbhtv:13982b6761d82dd561bbd73412a200da2e524576c0d1ccaa1021e78ae55826ee@ec2-184-73-206-155.compute-1.amazonaws.com:5432/dakhcnq9ooo322'.match(rgx);
+
+
+// db.query('CREATE DATABASE IF NOT EXISTS messages').then(() => console.log('Database created'));
+
+db = new Sequelize(match[5], match[1], match[2], {
+  dialect:  'postgres',
+  protocol: 'postgres',
+  port:     match[4],
+  host:     match[3],
+  logging: false,
+  dialectOptions: {
+    ssl: true
+  }
 });
 
-db.query('CREATE DATABASE IF NOT EXISTS messages').then(() => console.log('Database created'));
+db
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
 
-// // //DEPLOYMENT DB
-
-// const { Client } = require('pg');
-
-// const db = new Client({
-//   connectionString: dbUrl,
-//   ssl: true,
-// });
-
-// db.connect();
-
-// db.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-//   if (err) throw err;
-//   for (let row of res.rows) {
-//     console.log(JSON.stringify(row));
-//   }
-//   // db.end();
-// });
-
-//^^^DEPLOPYMENT DB
-
-
-
-const User = db.define('user', {
+const User = db.define('users', {
   //id is already created by default as PK
   username: {type: Sequelize.STRING, unique: true},
   hash: Sequelize.STRING,
@@ -77,8 +35,15 @@ const User = db.define('user', {
   last_name: Sequelize.STRING
 })
 
+User.associate = (models) => {
+    Todo.hasMany(models.Submission, {
+      foreignKey: 'userId',
+      as: 'submissions',
+    });
+};
 
-const Submission = db.define('submission', {
+
+const Submission = db.define('submissions', {
   //id (PK), createdAt, and user id (FK) are created by default
   user_message: Sequelize.TEXT,
   user_contact: Sequelize.TEXT,
@@ -91,8 +56,8 @@ const Submission = db.define('submission', {
 })
 
 //define 1:many relationship of Users:Submissions
-Submission.belongsTo(User);
-User.hasMany(Submission);
+// Submission.belongsTo(User);
+// User.hasMany(Submission);
 
 //create tables if they do not yet exist
 User.sync();
