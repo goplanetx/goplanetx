@@ -36,10 +36,10 @@ const User = db.define('users', {
 })
 
 User.associate = (models) => {
-    Todo.hasMany(models.Submission, {
-      foreignKey: 'userId',
-      as: 'submissions',
-    });
+  Todo.hasMany(models.Submission, {
+    foreignKey: 'userId',
+    as: 'submissions',
+  });
 };
 
 
@@ -56,8 +56,11 @@ const Submission = db.define('submissions', {
 })
 
 //define 1:many relationship of Users:Submissions
-// Submission.belongsTo(User);
-// User.hasMany(Submission);
+Submission.belongsTo(User);
+User.hasMany(Submission, {
+  foreignKey: 'userId',
+  allowNull: false
+});
 
 //create tables if they do not yet exist
 User.sync();

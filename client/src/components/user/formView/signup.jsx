@@ -100,7 +100,6 @@ class Signup extends React.Component {
           Type Password Again<FormControl type="password" placeholder="password..." onChange={this.onCheckPasswordChange.bind(this)}></FormControl>
         </ControlLabel>
         <br></br>
-        <Checkbox className="admin-checkbox" onChange={this.onAdminCheck.bind(this)}>Administrator</Checkbox>
         <br></br>
         <div className="col-centered">
           <ButtonToolbar>
