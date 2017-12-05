@@ -10,8 +10,8 @@ const Op = Sequelize.Op;
 module.exports = {
   signup: {
     //creates a new user or finds an already existing user
-    //***TODO***: handle incorrect pw but pre-existing user
     post: (req, res) => {
+      console.log('signup post with', req.body);
       bcrypt.hash(req.body.hash, 10, (err, hash) => {
         if (err) {
           console.log('Error hashing password ', err);
